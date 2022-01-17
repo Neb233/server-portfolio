@@ -1,5 +1,6 @@
 
 const db = require('../connection');
+const format = require('../../node_modules/pg-format')
 const seed = (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
   // 1. create tables
@@ -61,6 +62,22 @@ const seed = (data) => {
       )`)
     })
   // 2. insert data
+
+  .then(() => {
+    const category_Data_Copy = [...categoryData]
+    const category_Inserts = category_Data_Copy.map((category) => Object.values(category))
+    const sql = format(`INSERT INTO categories(slug,description) VALUES %L RETURNING *;`, category_Inserts)
+    return db.query(sql);
+  })
+  .then((categoryTableData) => {
+    const user_Data_Copy = [...userData]
+    const user_Inserts = user_Data_Copy.map((user)=>[user.username, user.name, user.avatar_url])
+    const sql = format(`INSERT INTO users(username,name,avatar_url) VALUES %L RETURNING *;`, user_Inserts)
+    return db.query(sql)
+  })
+  .then((userTableData, categoryTableData)=>{
+    console.log(userTableData.rows)
+  })
 };
 
 
