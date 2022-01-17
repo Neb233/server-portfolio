@@ -20,7 +20,7 @@ const seed = (data) => {
       return db.query(`
       CREATE TABLE categories (
         slug VARCHAR(255) PRIMARY KEY UNIQUE,
-        description VARCHAR(255) NOT NULL
+        description VARCHAR(255) 
       );` );
       
       
@@ -30,8 +30,8 @@ const seed = (data) => {
       return db.query(`
       CREATE TABLE users (
         username VARCHAR(255) PRIMARY KEY UNIQUE,
-        avatar_url TEXT NOT NULL,
-        name VARCHAR(255) NOT NULL
+        avatar_url TEXT ,
+        name VARCHAR(255) 
       )`);
     })
     .then(() => {
@@ -44,9 +44,9 @@ const seed = (data) => {
         designer VARCHAR(255) NOT NULL,
         review_img_url TEXT DEFAULT 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
         votes INT DEFAULT 0,
-        category TEXT REFERENCES categories(slug),
-        owner TEXT REFERENCES users(username),
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        category VARCHAR(500) REFERENCES categories(slug),
+        owner VARCHAR(500) NOT NULL REFERENCES users(username),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`)
     })
     .then(() => {
@@ -76,8 +76,21 @@ const seed = (data) => {
     return db.query(sql)
   })
   .then((userTableData, categoryTableData)=>{
-    console.log(userTableData.rows)
+    const review_Data_Copy = [...reviewData]
+    const review_Inserts = review_Data_Copy.map((review)=>[review.title,review.review_body,review.designer,review.review_img_url,review.votes, review.category, review.owner, review.created_at])
+    const sql = format(` INSERT INTO reviews(title,review_body,designer,review_img_url,votes, category, owner, created_at) VALUES %L RETURNING *;`, review_Inserts)
+    return db.query(sql);
   })
+  .then((reviewTableData) => {
+    const comment_Data_copy = [...commentData];
+    const comment_Inserts = comment_Data_copy.map((comment)=>[comment.body,comment.votes,comment.author,comment.review_id,comment.created_at])
+    const sql = format(`INSERT INTO comments(body,votes,author,review_id,created_at) VALUES %L RETURNING *;`, comment_Inserts)
+    return db.query(sql);
+  })
+  .then((commentTableData) => {
+    console.log(commentTableData.rows)
+  })
+
 };
 
 
