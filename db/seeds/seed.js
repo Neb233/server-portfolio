@@ -16,7 +16,6 @@ const seed = (data) => {
       return db.query('DROP TABLE IF EXISTS categories')
           })
     .then(() => {
-      console.log("tables have dropped");
       return db.query(`
       CREATE TABLE categories (
         slug VARCHAR(255) PRIMARY KEY UNIQUE,
@@ -26,7 +25,6 @@ const seed = (data) => {
       
     })
     .then(() => {
-      console.log("categories table created")
       return db.query(`
       CREATE TABLE users (
         username VARCHAR(255) PRIMARY KEY UNIQUE,
@@ -35,7 +33,6 @@ const seed = (data) => {
       )`);
     })
     .then(() => {
-      console.log("users table created")
       return db.query(`
       CREATE TABLE reviews (
         review_id SERIAL PRIMARY KEY,
@@ -50,7 +47,6 @@ const seed = (data) => {
       )`)
     })
     .then(() => {
-      console.log("reviews table created")
       return db.query(`
       CREATE TABLE comments (
         comment_id SERIAL PRIMARY KEY,
@@ -88,7 +84,7 @@ const seed = (data) => {
     return db.query(sql);
   })
   .then((commentTableData) => {
-    console.log(commentTableData.rows)
+  
   })
 
 };
