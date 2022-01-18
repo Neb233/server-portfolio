@@ -49,9 +49,10 @@ describe.only("/api/reviews/:review_id", () => {
                     designer: expect.any(String),
                     review_img_url: expect.any(String),
                     category: expect.any(String),
-                    created_at: expect.any(),
+                    created_at: expect.any(String),
+                    review_body: expect.any(String),
                     votes: expect.any(Number),
-                    comment_count: expect.any(Number)
+                    comment_count: expect.any(String)
 
                 })
             )
