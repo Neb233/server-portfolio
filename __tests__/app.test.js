@@ -31,3 +31,31 @@ describe("/api/categories", () => {
    })
     })
 })
+
+describe.only("/api/reviews/:review_id", () => {
+    describe("GET", () => {
+        test("200 code and responds with a review object", () => {
+            return request(app)
+            .get("/api/reviews/2")
+            .expect(200)
+            .then(({ body }) => {
+            const { review } = body;
+            expect(review).toBeInstanceOf(Object)
+            expect(review).toEqual(
+                expect.objectContaining({
+                    owner: expect.any(String),
+                    title: expect.any(String),
+                    review_id: expect.any(Number),
+                    designer: expect.any(String),
+                    review_img_url: expect.any(String),
+                    category: expect.any(String),
+                    created_at: expect.any(),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(Number)
+
+                })
+            )
+                    })
+        })
+    })
+})

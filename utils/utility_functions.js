@@ -1,3 +1,0 @@
-exports.createCategoryAndUserReference = (categories, users) => {
-    
-}
