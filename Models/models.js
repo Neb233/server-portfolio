@@ -13,8 +13,12 @@ return db.query('SELECT reviews.*, COUNT (comment_id) AS comment_count FROM revi
 
 .then((result) => {
     const formattedResult = result.rows[0]
-    
+if(!formattedResult){
+    return Promise.reject({ status: 404, msg: "Not found"})
+}
+    else{
     return formattedResult
+    }
 })
 
 }

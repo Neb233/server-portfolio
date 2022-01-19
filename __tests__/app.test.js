@@ -58,14 +58,22 @@ describe.only("/api/reviews/:review_id", () => {
             )
                     })
         })
-        test("400 code and responds with bad request for an invalid id",() => {
+        test("400 code and responds with Invalid input for an invalid id",() => {
             return request(app)
             .get("/api/reviews/notanid")
             .expect(400)
-            .then(({ body }) => {
-            expect(body.msg).toBe("Invalid input")
+            .then((res) => {
+            expect(res.body.msg).toBe("Invalid input")
             })
-        } )
+        })
+        test("404 code and responds with Not Found for non-existent review id", () => {
+            return request(app)
+            .get("/api/reviews/99999")
+            .expect(404)
+            .then((res)=>{
+            expect(res.body.msg).toBe("Not found")
+            })
+        })
     })
 })
 

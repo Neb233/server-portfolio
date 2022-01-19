@@ -8,11 +8,12 @@ const { handleCustomErrors, handleServerErrors, handlePsqlErrors, handle404s } =
 app.get('/api/categories', getCategories)
 app.get('/api/reviews/:review_id', getReview)
 
-app.call('*', handle404s);
+app.all('*', handle404s);
 
 app.use(handleCustomErrors);
-app.use(handleServerErrors);
 app.use(handlePsqlErrors);
+app.use(handleServerErrors);
+
 
 module.exports = app
 
