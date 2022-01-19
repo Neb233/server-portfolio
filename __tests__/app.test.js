@@ -58,5 +58,16 @@ describe.only("/api/reviews/:review_id", () => {
             )
                     })
         })
+        test("400 code and responds with bad request for an invalid id",() => {
+            return request(app)
+            .get("/api/reviews/notanid")
+            .expect(400)
+            .then(({ body }) => {
+            expect(body.msg).toBe("Invalid input")
+            })
+        } )
     })
 })
+
+//need one test with 404 not found with e.g. /api/reviews/999999999
+//second test with 400 bad request for /api/reviews/notanid
