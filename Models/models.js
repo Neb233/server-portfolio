@@ -89,3 +89,20 @@ exports.fetchComments = (review_id) => {
       return rows;
     });
 };
+
+exports.makeComment = (review_id, Username, Body) => {
+  const formattedPost = [review_id, Username, Body];
+  console.log(Username, Body);
+  if (!Username || !Body) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else {
+    return db
+      .query(
+        "INSERT INTO comments(review_id, author, body) VALUES ($1, $2, $3) RETURNING *",
+        formattedPost
+      )
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  }
+};

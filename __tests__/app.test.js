@@ -174,7 +174,7 @@ describe("GET /api/reviews", () => {
   });
 });
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
+describe("GET /api/reviews/:review_id/comments", () => {
   describe("GET", () => {
     test("200 and responds with array of comments for the given review_id", () => {
       return request(app)
@@ -223,3 +223,63 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
     });
   });
 });
+describe.only("POST /api.reviews/:review_id/comments", () => {
+  describe("POST", () => {
+    test("200 and responds with the posted comment", () => {
+      const newComment = { username: "mallionaire", body: "Test comment" };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment).toBeInstanceOf(Object);
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+            })
+          );
+        });
+    });
+    test("400 and returns Bad request if the request object is invalid", () => {
+      const invalidComment = {
+        username: "mallionaire",
+        invalid: "Test comment",
+      };
+      return request(app)
+        .post("/api/reviews/2/comments")
+        .send(invalidComment)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad request");
+        });
+    });
+    test("404 and returns Not found if the requested review doesn't exist", () => {
+      const newComment = { username: "mallionaire", body: "Test comment" };
+      return request(app)
+        .post("/api/reviews/1234567/comments")
+        .send(newComment)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Review not found");
+        });
+    });
+    test("404 and returns not gound if the user trying to post doesn't exist", () => {
+      const newComment = { username: "invalid", body: "Test comment" };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("User not found");
+        });
+    });
+  });
+});
+//If the review doesn't exist? done
+//If the request object contains the wrong keys? done
+//If the user doesn't exist?

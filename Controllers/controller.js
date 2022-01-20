@@ -7,8 +7,12 @@ const {
   updateReview,
   fetchReviews,
   fetchComments,
+  makeComment,
 } = require("../Models/models");
-const { checkReviewExists } = require("../Utilities/utilities");
+const {
+  checkReviewExists,
+  checkUserExists,
+} = require("../Utilities/utilities");
 
 exports.getCategories = (req, res, next) => {
   fetchCategories()
@@ -58,10 +62,36 @@ exports.getComments = (req, res, next) => {
           res.status(200).send({ comments });
         });
       } else {
-        return Promise.reject({ status: 404, msg: "Not found" });
+        return Promise.reject({ status: 404, msg: "Review_id not found" });
       }
     })
     .catch((err) => {
+      next(err);
+    });
+};
+exports.postComment = (req, res, next) => {
+  const review_id = req.params.review_id;
+  const Username = req.body.username;
+  const Body = req.body.body;
+  //Following code runs the request through two utility functions, one to check that the user posting the comment exists, and if it passes that, the next function checks that the review being commented on exists
+  return checkUserExists(req.body.username)
+    .then((userExists) => {
+      if (userExists) {
+        return checkReviewExists(req.params.review_id).then((reviewExists) => {
+          if (reviewExists) {
+            return makeComment(review_id, Username, Body).then((comment) => {
+              res.status(201).send({ comment });
+            });
+          } else {
+            return Promise.reject({ status: 404, msg: "Review not found" });
+          }
+        });
+      } else {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };
