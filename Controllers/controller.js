@@ -4,6 +4,7 @@ const {
   fetchCategories,
   fetchReview,
   updateReview,
+  fetchReviews,
 } = require("../Models/models");
 
 exports.getCategories = (req, res, next) => {
@@ -30,6 +31,17 @@ exports.patchReview = (req, res, next) => {
   updateReview(req.params.review_id, req.body)
     .then((review) => {
       res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+exports.getReviews = (req, res, next) => {
+  const order = req.query.order;
+  const sort_by = req.query.sort_by;
+  fetchReviews(sort_by, order)
+    .then((reviews) => {
+      res.status(200).send({ reviews });
     })
     .catch((err) => {
       next(err);

@@ -4,6 +4,7 @@ const testData = require("../db/data/test-data/index.js");
 const seed = require("../db/seeds/seed.js");
 const app = require("../app");
 const request = require("supertest");
+const { get } = require("express/lib/response");
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -75,7 +76,7 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
   describe("PATCH", () => {
     test("200 code and responds with the updated review", () => {
       const newVote = {
@@ -113,6 +114,53 @@ describe.only("PATCH /api/reviews/:review_id", () => {
         .expect(404)
         .then((res) => {
           expect(res.body.msg).toBe("Not found");
+        });
+    });
+  });
+});
+describe.only("GET /api/reviews", () => {
+  describe("GET", () => {
+    test("200 code and responds with a review array of reviews objects with no queries", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toBeInstanceOf(Array);
+          reviews.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                owner: expect.any(String),
+                title: expect.any(String),
+                review_id: expect.any(Number),
+                category: expect.any(String),
+                review_img_url: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("reviews sorted by descending date by default", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toBeInstanceOf(Array);
+          expect(reviews).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("reviews sorted by ascending review_id with correct request", () => {
+      return request(app)
+        .get("/api/reviews?order=asc&sort_by=review_id")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toBeInstanceOf(Array);
+          expect(reviews).toBeSortedBy("review_id", { ascending: true });
         });
     });
   });

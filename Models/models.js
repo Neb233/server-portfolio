@@ -44,3 +44,37 @@ exports.updateReview = (review_id, request) => {
       });
   }
 };
+exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
+  const validKeys = [
+    "ASC",
+    "DESC",
+    "asc",
+    "desc",
+    "owner",
+    "title",
+    "review_id",
+    "category",
+    "review_img_url",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  if (!validKeys.includes(sort_by) || !validKeys.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  const valuesArray = [];
+
+  let sqlQuery =
+    "SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes, COUNT (comment_id) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id=reviews.review_id GROUP BY reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes";
+
+  if (category) {
+    sqlQuery += " WHERE category =$1";
+    valuesArray.push(category);
+  }
+
+  sqlQuery += ` ORDER BY reviews.${sort_by} ${order};`;
+
+  return db.query(sqlQuery, valuesArray).then(({ rows }) => {
+    return rows;
+  });
+};
