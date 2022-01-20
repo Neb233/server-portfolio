@@ -196,6 +196,15 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
           });
         });
     });
+    test("200 and returns an empty array if review_id is correct but there are no comments", () => {
+      return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments.length).toBe(0);
+        });
+    });
     test("404 and responds with not found if review_id doesn't exist", () => {
       return request(app)
         .get("/api/reviews/1234567/comments")

@@ -1,19 +1,15 @@
-const { Test } = require('supertest')
-const { makeReviewObject } = require('../utilities/utilities')
+const { Test } = require("supertest");
+const { checkReviewExists } = require("../Utilities/utilities");
 
-describe('makeReviewObject', () => {
-    test('Returns an empty object if passed no arguments', () =>{
-        expect(makeReviewObject()).toEqual({})
-    })
-    test('Adds a comment_count key value pair to a single review object', () => {
-        const Comments = [{
-            comment_id: 1,
-            author: 'bainesface',
-            review_id: 2,
-            votes: 16,
-            created_at: '2017-11-22 12:43:33.389+00',
-            body: 'I loved this game too!'
-          }]
-        const Reviews = []
-    })
-})
+describe("makeReviewObject", () => {
+  test("Returns true for an existing house ID", () => {
+    return checkReviewExists(1).then((res) => {
+      expect(res).toBe(true);
+    });
+  });
+  test("Returns false for a non-existent house ID", () => {
+    return checkReviewExists(12345).then((res) => {
+      expect(res).toBe(false);
+    });
+  });
+});

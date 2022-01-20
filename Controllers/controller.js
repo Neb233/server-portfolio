@@ -8,6 +8,7 @@ const {
   fetchReviews,
   fetchComments,
 } = require("../Models/models");
+const { checkReviewExists } = require("../Utilities/utilities");
 
 exports.getCategories = (req, res, next) => {
   fetchCategories()
@@ -50,12 +51,17 @@ exports.getReviews = (req, res, next) => {
     });
 };
 exports.getComments = (req, res, next) => {
-  fetchComments(req.params.review_id)
-    .then((comments) => {
-      res.status(200).send({ comments });
+  return checkReviewExists(req.params.review_id)
+    .then((reviewExists) => {
+      if (reviewExists) {
+        return fetchComments(req.params.review_id).then((comments) => {
+          res.status(200).send({ comments });
+        });
+      } else {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };

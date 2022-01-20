@@ -86,10 +86,6 @@ exports.fetchComments = (review_id) => {
       formattedID
     )
     .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
-      } else {
-        return rows;
-      }
+      return rows;
     });
 };
