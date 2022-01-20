@@ -292,5 +292,34 @@ describe("DELETE /api/comments/:comment_id", () => {
           expect(Object.entries(response.body).length).toBe(0);
         });
     });
+    test("returns 404 and comment not found if the comment_id doesn't exist", () => {
+      return request(app)
+        .delete("/api/comments/2346754")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Comment not found");
+        });
+    });
+    test("returns 400 and bad request if the comment id is invalid", () => {
+      return request(app)
+        .delete("/api/comments/invalid")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad request");
+        });
+    });
+  });
+});
+describe.only("GET /api", () => {
+  describe("GET", () => {
+    test("Returns a JSON object describing all the available endpoints on the API", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+          const { endpoints } = body;
+          expect(endpoints).toBeInstanceOf(Object);
+        });
+    });
   });
 });

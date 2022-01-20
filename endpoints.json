@@ -30,5 +30,22 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves an object containing the requested review",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "owner": "sarah",
+        "title": "",
+        "review_id": "",
+        "review_body": "",
+        "designer": "",
+        "review_img_url": "",
+        "category": "hidden-roles",
+        "created_at": "",
+        "votes": 2,
+        "comment_count": 5
+      }
   }
 }

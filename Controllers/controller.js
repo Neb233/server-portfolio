@@ -9,10 +9,12 @@ const {
   fetchComments,
   makeComment,
   removeComment,
+  fetchAPIS,
 } = require("../Models/models");
 const {
   checkReviewExists,
   checkUserExists,
+  checkCommentExists,
 } = require("../Utilities/utilities");
 
 exports.getCategories = (req, res, next) => {
@@ -96,10 +98,26 @@ exports.postComment = (req, res, next) => {
     });
 };
 exports.deleteComment = (req, res, next) => {
-  removeComment(req.params)
-    .then((response) => {
-      console.log(response);
-      res.status(204).send(response);
+  return checkCommentExists(req.params.comment_id)
+    .then((commentExists) => {
+      if (commentExists) {
+        removeComment(req.params).then((response) => {
+          res.status(204).send(response);
+        });
+      } else {
+        return Promise.reject({ status: 404, msg: "Comment not found" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
+};
+exports.getAPIS = (req, res, next) => {
+  console.log("getting into controller");
+  fetchAPIS()
+    .then((APIS) => {
+      res.status(200).send({ APIS });
     })
     .catch((err) => {
       console.log(err);

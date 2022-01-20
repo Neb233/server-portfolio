@@ -8,6 +8,7 @@ const {
   getComments,
   postComment,
   deleteComment,
+  getAPIS,
 } = require("./Controllers/controller");
 app.use(express.json());
 const {
@@ -24,6 +25,7 @@ app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id/comments", getComments);
 app.post("/api/reviews/:review_id/comments", postComment);
 app.delete("/api/comments/:comment_id", deleteComment);
+app.get("/api", getAPIS);
 
 app.all("*", handle404s);
 
