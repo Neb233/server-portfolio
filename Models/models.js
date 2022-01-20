@@ -27,7 +27,7 @@ exports.fetchReview = (review_id) => {
 exports.updateReview = (review_id, request) => {
   const formattedRequest = [request.inc_votes, review_id];
   if (isNaN(request.inc_votes)) {
-    return Promise.reject({ status: 400, msg: "Invalid input" });
+    return Promise.reject({ status: 400, msg: "Bad request" });
   } else {
     return db
       .query(
@@ -77,4 +77,19 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
   return db.query(sqlQuery, valuesArray).then(({ rows }) => {
     return rows;
   });
+};
+exports.fetchComments = (review_id) => {
+  const formattedID = [review_id];
+  return db
+    .query(
+      "SELECT comments.* FROM comments WHERE comments.review_id=$1 GROUP BY comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body;",
+      formattedID
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return rows;
+      }
+    });
 };

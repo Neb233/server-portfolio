@@ -5,6 +5,7 @@ const {
   getReview,
   patchReview,
   getReviews,
+  getComments,
 } = require("./Controllers/controller");
 app.use(express.json());
 const {
@@ -18,6 +19,7 @@ app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReview);
 app.patch("/api/reviews/:review_id", patchReview);
 app.get("/api/reviews", getReviews);
+app.get("/api/reviews/:review_id/comments", getComments);
 
 app.all("*", handle404s);
 

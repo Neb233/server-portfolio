@@ -1,10 +1,12 @@
 const req = require("express/lib/request");
+const { send } = require("express/lib/response");
 const res = require("express/lib/response");
 const {
   fetchCategories,
   fetchReview,
   updateReview,
   fetchReviews,
+  fetchComments,
 } = require("../Models/models");
 
 exports.getCategories = (req, res, next) => {
@@ -44,6 +46,16 @@ exports.getReviews = (req, res, next) => {
       res.status(200).send({ reviews });
     })
     .catch((err) => {
+      next(err);
+    });
+};
+exports.getComments = (req, res, next) => {
+  fetchComments(req.params.review_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };
