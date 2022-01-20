@@ -8,6 +8,7 @@ const {
   fetchReviews,
   fetchComments,
   makeComment,
+  removeComment,
 } = require("../Models/models");
 const {
   checkReviewExists,
@@ -62,7 +63,7 @@ exports.getComments = (req, res, next) => {
           res.status(200).send({ comments });
         });
       } else {
-        return Promise.reject({ status: 404, msg: "Review_id not found" });
+        return Promise.reject({ status: 404, msg: "Review not found" });
       }
     })
     .catch((err) => {
@@ -89,6 +90,16 @@ exports.postComment = (req, res, next) => {
       } else {
         return Promise.reject({ status: 404, msg: "User not found" });
       }
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+exports.deleteComment = (req, res, next) => {
+  removeComment(req.params)
+    .then((response) => {
+      console.log(response);
+      res.status(204).send(response);
     })
     .catch((err) => {
       console.log(err);

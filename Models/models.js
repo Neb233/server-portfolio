@@ -92,7 +92,6 @@ exports.fetchComments = (review_id) => {
 
 exports.makeComment = (review_id, Username, Body) => {
   const formattedPost = [review_id, Username, Body];
-  console.log(Username, Body);
   if (!Username || !Body) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   } else {
@@ -105,4 +104,11 @@ exports.makeComment = (review_id, Username, Body) => {
         return rows[0];
       });
   }
+};
+exports.removeComment = (comment_id) => {
+  return db
+    .query("DELETE FROM comments WHERE comment_id=$1", [comment_id.comment_id])
+    .then((response) => {
+      return response.rows;
+    });
 };

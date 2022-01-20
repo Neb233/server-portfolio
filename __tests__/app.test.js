@@ -210,7 +210,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
         .get("/api/reviews/1234567/comments")
         .expect(404)
         .then((res) => {
-          expect(res.body.msg).toBe("Not found");
+          expect(res.body.msg).toBe("Review not found");
         });
     });
     test("400 and responds with bad request if review_id is invalid", () => {
@@ -223,7 +223,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
     });
   });
 });
-describe.only("POST /api.reviews/:review_id/comments", () => {
+describe("POST /api.reviews/:review_id/comments", () => {
   describe("POST", () => {
     test("200 and responds with the posted comment", () => {
       const newComment = { username: "mallionaire", body: "Test comment" };
@@ -280,6 +280,17 @@ describe.only("POST /api.reviews/:review_id/comments", () => {
     });
   });
 });
-//If the review doesn't exist? done
-//If the request object contains the wrong keys? done
-//If the user doesn't exist?
+describe("DELETE /api/comments/:comment_id", () => {
+  describe("DELETE", () => {
+    test("returns 204 and deletes the comment", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body).toBeInstanceOf(Object);
+          expect(Object.entries(response.body).length).toBe(0);
+        });
+    });
+  });
+});
