@@ -9,7 +9,6 @@ const {
   fetchComments,
   makeComment,
   removeComment,
-  fetchAPIS,
 } = require("../Models/models");
 const {
   checkReviewExists,
@@ -109,18 +108,6 @@ exports.deleteComment = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
-      next(err);
-    });
-};
-exports.getAPIS = (req, res, next) => {
-  console.log("getting into controller");
-  fetchAPIS()
-    .then((APIS) => {
-      res.status(200).send({ APIS });
-    })
-    .catch((err) => {
-      console.log(err);
       next(err);
     });
 };

@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const fs = require("fs");
 
 exports.fetchCategories = () => {
   return db.query("SELECT * FROM categories;").then((result) => {
@@ -111,11 +112,4 @@ exports.removeComment = (comment_id) => {
     .then((response) => {
       return response.rows;
     });
-};
-exports.fetchAPIS = () => {
-  console.log("getting into model");
-  return db.query("SELECT * FROM sys.endpoints").then((response) => {
-    console.log(response.rows);
-    return response.rows;
-  });
 };

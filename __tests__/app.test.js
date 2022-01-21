@@ -40,6 +40,7 @@ describe("GET /api/reviews/:review_id", () => {
         .expect(200)
         .then(({ body }) => {
           const { review } = body;
+          console.log(review);
           expect(review).toBeInstanceOf(Object);
           expect(review).toEqual(
             expect.objectContaining({
@@ -313,13 +314,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 describe.only("GET /api", () => {
   describe("GET", () => {
     test("Returns a JSON object describing all the available endpoints on the API", () => {
-      return request(app)
-        .get("/api")
-        .expect(200)
-        .then(({ body }) => {
-          const { endpoints } = body;
-          expect(endpoints).toBeInstanceOf(Object);
-        });
+      return request(app).get("/api").expect(200);
     });
   });
 });
