@@ -3,6 +3,7 @@ const res = require("express/lib/response");
 const app = express();
 const fs = require("fs");
 const endpoints = require("./endpoints.json");
+const cors = require("cors");
 const {
   getCategories,
   getReview,
@@ -12,6 +13,7 @@ const {
   postComment,
   deleteComment,
 } = require("./Controllers/controller");
+app.use(cors());
 app.use(express.json());
 const {
   handleCustomErrors,
