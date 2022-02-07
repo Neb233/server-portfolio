@@ -75,6 +75,9 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
 
   sqlQuery += ` ORDER BY reviews.${sort_by} ${order};`;
 
+  console.log(sqlQuery);
+  console.log(valuesArray);
+
   return db.query(sqlQuery, valuesArray).then(({ rows }) => {
     return rows;
   });

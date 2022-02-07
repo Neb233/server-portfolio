@@ -48,7 +48,8 @@ exports.patchReview = (req, res, next) => {
 exports.getReviews = (req, res, next) => {
   const order = req.query.order;
   const sort_by = req.query.sort_by;
-  fetchReviews(sort_by, order)
+
+  fetchReviews(sort_by, order, req.query.category)
     .then((reviews) => {
       res.status(200).send({ reviews });
     })

@@ -118,7 +118,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     });
   });
 });
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
   describe("GET", () => {
     test("200 code and responds with a review array of reviews objects with no queries", () => {
       return request(app)
@@ -169,6 +169,29 @@ describe("GET /api/reviews", () => {
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("Bad request");
+        });
+    });
+    test.only("reviews filter by category with correct request", () => {
+      return request(app)
+        .get("/api/reviews?category=strategy")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toBeInstanceOf(Array);
+          reviews.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                owner: expect.any(String),
+                title: expect.any(String),
+                review_id: expect.any(Number),
+                category: expect("strategy"),
+                review_img_url: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(String),
+              })
+            );
+          });
         });
     });
   });
