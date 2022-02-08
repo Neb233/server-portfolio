@@ -65,20 +65,20 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
   }
   const valuesArray = [];
 
-  let sqlQuery =
-    "SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes, COUNT (comment_id) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id=reviews.review_id GROUP BY reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes";
+  let sqlQuery1 =
+    "SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes, COUNT (comment_id) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id=reviews.review_id";
+
+  let sqlQuery2 =
+    " GROUP BY reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes";
 
   if (category) {
-    sqlQuery += " WHERE category =$1";
+    sqlQuery1 += " WHERE reviews.category=$1";
     valuesArray.push(category);
   }
+  let finalQuery = sqlQuery1 + sqlQuery2;
+  finalQuery += ` ORDER BY reviews.${sort_by} ${order};`;
 
-  sqlQuery += ` ORDER BY reviews.${sort_by} ${order};`;
-
-  console.log(sqlQuery);
-  console.log(valuesArray);
-
-  return db.query(sqlQuery, valuesArray).then(({ rows }) => {
+  return db.query(finalQuery, valuesArray).then(({ rows }) => {
     return rows;
   });
 };

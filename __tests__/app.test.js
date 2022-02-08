@@ -118,7 +118,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     });
   });
 });
-describe.only("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
   describe("GET", () => {
     test("200 code and responds with a review array of reviews objects with no queries", () => {
       return request(app)
@@ -171,7 +171,7 @@ describe.only("GET /api/reviews", () => {
           expect(res.body.msg).toBe("Bad request");
         });
     });
-    test.only("reviews filter by category with correct request", () => {
+    test("reviews filter by category with correct request", () => {
       return request(app)
         .get("/api/reviews?category=strategy")
         .expect(200)
