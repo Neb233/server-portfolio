@@ -9,6 +9,8 @@ const {
   fetchComments,
   makeComment,
   removeComment,
+  fetchUsers,
+  fetchUser,
 } = require("../Models/models");
 const {
   checkReviewExists,
@@ -110,6 +112,27 @@ exports.deleteComment = (req, res, next) => {
       }
     })
     .catch((err) => {
+      next(err);
+    });
+};
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUser = (req, res, next) => {
+  console.log("getting into controller");
+  fetchUser(req.params.username)
+    .then((user) => {
+      res.status(200).send({ user });
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };

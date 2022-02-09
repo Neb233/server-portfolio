@@ -339,3 +339,43 @@ describe("GET /api", () => {
     });
   });
 });
+describe("GET /api/users", () => {
+  describe("GET", () => {
+    test("Returns an array of objects of usernames", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          const { users } = body;
+          expect(users).toBeInstanceOf(Array);
+          users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
+});
+describe.only("GET /api/users/:username", () => {
+  describe("GET", () => {
+    test("200 code and returns a user object with username, avatar_url, and name properties", () => {
+      return request(app)
+        .get("/api/users/philippaclaire9")
+        .expect(200)
+        .then(({ body }) => {
+          const { user } = body;
+          expect(user).toBeInstanceOf(Object);
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              avatar_url: expect.any(String),
+              name: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+});

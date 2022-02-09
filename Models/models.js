@@ -116,3 +116,28 @@ exports.removeComment = (comment_id) => {
       return response.rows;
     });
 };
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users;").then((result) => {
+    return result.rows;
+  });
+};
+exports.fetchUserByUserName = (username) => {
+  console.log("getting into model");
+  const formattedUserName = [username];
+  return db
+    .query(
+      "SELECT users.* FROM users WHERE users.username=$1 GROUP BY users.username LIMIT 1;",
+      formattedUserName
+    )
+    .then((result) => {
+      console.log(result);
+      const formattedResult = result.rows[0];
+      console.log(formattedResult);
+      if (!formattedResult) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      } else {
+        return formattedResult;
+      }
+    });
+};

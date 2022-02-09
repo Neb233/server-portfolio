@@ -12,6 +12,8 @@ const {
   getComments,
   postComment,
   deleteComment,
+  getUsers,
+  getUser,
 } = require("./Controllers/controller");
 app.use(cors());
 app.use(express.json());
@@ -32,6 +34,8 @@ app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api", (req, res) => {
   res.status(200).send({ endpoints });
 });
+app.get("/api/users", getUsers);
+app.get("api/users/:username", getUser);
 
 app.all("*", handle404s);
 
